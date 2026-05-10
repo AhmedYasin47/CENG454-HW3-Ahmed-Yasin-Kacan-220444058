@@ -31,4 +31,8 @@ public class EnemyController : MonoBehaviour
     {
         currentStrategy = newStrategy;
     }
+    void OnEnable()
+    {
+        SetStrategy(new ZigZagMovementStrategy());
+    }
 }
