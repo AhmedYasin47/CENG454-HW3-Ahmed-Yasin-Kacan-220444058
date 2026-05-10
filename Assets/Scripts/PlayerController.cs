@@ -17,5 +17,15 @@ public class PlayerController : MonoBehaviour
         moveDirection = moveDirection.normalized;
 
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+        // TEST İÇİN: Boşluk tuşuna basıldığında Çekirdeğe hasar ver.
+    if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            // Sahnedeki CoreHealth scriptini bul
+            CoreHealth core = FindFirstObjectByType<CoreHealth>();
+        if (core != null)
+            {
+                core.TakeDamage(10); // 10 hasar vur
+            }
+        }
     }
 }
