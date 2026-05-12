@@ -1,5 +1,4 @@
-using UnityEngine;
-
+using UnityEngine;  
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] private float speed = 3f; 
@@ -8,8 +7,8 @@ public class EnemyController : MonoBehaviour
     
     [Header("Saldırı Ayarları")]
     [SerializeField] private int damageAmount = 10;
-    [SerializeField] private float attackCooldown = 1.5f; // Animation Event kullanmazsan devreye girer
-    [SerializeField] private bool useAnimationEvent = true; // Animation event mi yoksa cooldown mu?
+    [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private bool useAnimationEvent = true;
 
     private Transform coreTarget;
     private MovementStrategy_Interface currentStrategy;
@@ -44,11 +43,11 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        
         if (coreTarget == null || currentStrategy == null) return;
 
         float distance = GetDistanceToCore();
 
-        // Hysteresis: titreşimi önler
         if (isAttacking)
         {
             if (distance > resumeDistance)
@@ -59,17 +58,16 @@ public class EnemyController : MonoBehaviour
         else
         {
             if (distance <= stoppingDistance)
-            {
-                isAttacking = true;
-                lastAttackTime = Time.time; // İlk vuruşta hemen vurmasın diye reset
-            }
+    {
+            isAttacking = true;
+            lastAttackTime = Time.time - attackCooldown;
+    }
         }
 
         if (!isAttacking)
         {
-            // HAREKET MODU
             currentStrategy.Move(this.transform, coreTarget, speed);
-            if (animator != null) animator.SetBool("isAttacking", false);
+            SetAnimatorBool("isAttacking", false);
 
             Vector3 lookDirection = coreTarget.position - transform.position;
             lookDirection.y = 0; 
@@ -80,8 +78,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            // SALDIRI MODU
-            if (animator != null) animator.SetBool("isAttacking", true);
+            SetAnimatorBool("isAttacking", true);
             
             Vector3 lookDirection = coreTarget.position - transform.position;
             lookDirection.y = 0;
@@ -90,13 +87,12 @@ public class EnemyController : MonoBehaviour
                 transform.rotation = Quaternion.LookRotation(lookDirection);
             }
             
-            if (rb != null) 
+            if (rb != null && !rb.isKinematic) 
             {
                 rb.linearVelocity = Vector3.zero; 
                 rb.angularVelocity = Vector3.zero;
             }
 
-            // Animation Event kullanmıyorsak, cooldown ile vur
             if (!useAnimationEvent)
             {
                 if (Time.time >= lastAttackTime + attackCooldown)
@@ -108,14 +104,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // Animation Event'in çağıracağı metod (vuruşun tam temas frame'ine bağlanır)
     public void DealDamage()
-    {
-        // Sadece saldırı modundayken ve core hala varsa hasar ver
-        if (!isAttacking || coreHealth == null) return;
-        
-        coreHealth.TakeDamage(damageAmount);
-    }
+{
+    Debug.Log("DealDamage çağrıldı! isAttacking: " + isAttacking + ", coreHealth: " + (coreHealth != null));
+    
+    if (!isAttacking || coreHealth == null) return;
+    coreHealth.TakeDamage(damageAmount);
+}
 
     private float GetDistanceToCore()
     {
@@ -128,6 +123,19 @@ public class EnemyController : MonoBehaviour
         Vector3 closestPointOnMe = myCollider.ClosestPoint(closestPointOnCore);
         return Vector3.Distance(closestPointOnMe, closestPointOnCore);
     }
+    private void SetAnimatorBool(string paramName, bool value)
+    {
+        if (animator == null) return;
+        
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName && param.type == AnimatorControllerParameterType.Bool)
+            {
+                animator.SetBool(paramName, value);
+                return;
+            }
+        }
+    }
 
     public void SetStrategy(MovementStrategy_Interface newStrategy)
     {
@@ -138,7 +146,7 @@ public class EnemyController : MonoBehaviour
     {
         SetStrategy(new ZigZagMovementStrategy());
         isAttacking = false;
-        if (animator != null) animator.SetBool("isAttacking", false);
+        SetAnimatorBool("isAttacking", false);
 
         if (coreTarget != null)
         {
