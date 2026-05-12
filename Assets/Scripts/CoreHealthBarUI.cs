@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CoreHealthBarUI : MonoBehaviour
 {
     [SerializeField] private Slider healthSlider;
-    [SerializeField] private Text  healthText;
+    [SerializeField] private TextMeshProUGUI  healthText;
     [SerializeField] private Image fillImage;
     
     [Header("Renk Ayarları")]
