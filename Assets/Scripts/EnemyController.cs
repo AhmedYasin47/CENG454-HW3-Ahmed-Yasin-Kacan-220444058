@@ -9,6 +9,13 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int damageAmount = 10;
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private bool useAnimationEvent = true;
+    [SerializeField] private MovementType movementType = MovementType.ZigZag;
+
+    public enum MovementType
+    {
+        ZigZag,
+        Direct
+    }
 
     private Transform coreTarget;
     private MovementStrategy_Interface currentStrategy;
@@ -38,8 +45,21 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        SetStrategy(new ZigZagMovementStrategy());
+        SetStrategyByType();
     }
+
+    private void SetStrategyByType()
+{
+    switch (movementType)
+    {
+        case MovementType.ZigZag:
+            SetStrategy(new ZigZagMovementStrategy());
+            break;
+        case MovementType.Direct:
+            SetStrategy(new DirectMovementStrategy());
+            break;
+    }
+}
 
     void Update()
     {

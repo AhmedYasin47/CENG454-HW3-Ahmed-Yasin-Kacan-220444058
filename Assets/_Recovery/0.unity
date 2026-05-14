@@ -209,8 +209,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ef7a2964ba0bc4187e3d586227ff5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 8938671149822179552, guid: 5dbcd92eab2064b438361012861a65fe, type: 3}
-  poolSize: 10
+  zigzagEnemyPrefab: {fileID: 8938671149822179552, guid: 5dbcd92eab2064b438361012861a65fe, type: 3}
+  directEnemyPrefab: {fileID: 8938671149822179552, guid: 789e585ae342b84469250e8afc2e12ab, type: 3}
+  poolSizePerType: 5
   spawnInterval: 2
 --- !u!4 &197821553
 Transform:
@@ -1490,6 +1491,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6579543695161430493, guid: f4919b63eba732c419c6b1ab4347f125, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6579543695161430493, guid: f4919b63eba732c419c6b1ab4347f125, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7265512941254899098, guid: f4919b63eba732c419c6b1ab4347f125, type: 3}
