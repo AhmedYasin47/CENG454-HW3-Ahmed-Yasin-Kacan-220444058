@@ -77,16 +77,26 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Shoot()
+{
+    if (firePoint == null)
     {
-        if (firePoint == null)
-        {
-            Debug.LogWarning("FirePoint atanmamış!");
-            return;
-        }
-
-        int damage = myWeapon.GetDamage();
-        Debug.Log("ATEŞ! Hasar: " + damage);
+        Debug.LogWarning("FirePoint atanmamış!");
+        return;
     }
+
+    int damage = myWeapon.GetDamage();
+    
+    GameObject bullet = BulletPool.Instance.GetBullet();
+    bullet.transform.position = firePoint.position;
+    bullet.transform.rotation = firePoint.rotation;
+    bullet.SetActive(true);
+    
+    BulletController bulletCtrl = bullet.GetComponent<BulletController>();
+    if (bulletCtrl != null)
+    {
+        bulletCtrl.Launch(firePoint.forward, damage);
+    }
+}
 
     private void HandleUpgrade()
     {
