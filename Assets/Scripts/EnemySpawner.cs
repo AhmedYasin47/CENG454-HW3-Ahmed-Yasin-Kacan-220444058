@@ -8,12 +8,13 @@ public class EnemySpawner : MonoBehaviour
     public GameObject directEnemyPrefab;
     
     [Header("Havuz Ayarları")]
-    public int poolSizePerType = 5;
-    public float spawnInterval = 3f;
+    public int poolSizePerType = 10;
+    
+    [Header("Spawn Alanı")]
+    public float spawnRadius = 10f;
 
     private List<GameObject> zigzagPool;
     private List<GameObject> directPool;
-    private float spawnTimer;
 
     void Start()
     {
@@ -35,34 +36,23 @@ public class EnemySpawner : MonoBehaviour
         return pool;
     }
 
-    void Update()
+    public void SpawnOne()
     {
-        spawnTimer += Time.deltaTime;
+        List<GameObject> chosenPool = Random.value < 0.5f ? zigzagPool : directPool;
         
-        if (spawnTimer >= spawnInterval)
+        foreach (GameObject enemy in chosenPool)
         {
-            SpawnEnemy();
-            spawnTimer = 0f;
+            if (!enemy.activeInHierarchy)
+            {
+                Vector3 randomSpawnPoint = new Vector3(
+                    Random.Range(-spawnRadius, spawnRadius),
+                    1f,
+                    Random.Range(-spawnRadius, spawnRadius)
+                );
+                enemy.transform.position = randomSpawnPoint;
+                enemy.SetActive(true);
+                return;
+            }
         }
     }
-
-    void SpawnEnemy()
-    {
-    List<GameObject> chosenPool = Random.value < 0.5f ? zigzagPool : directPool;
-    
-    foreach (GameObject enemy in chosenPool)
-    {
-        if (!enemy.activeInHierarchy)
-        {
-            Vector3 randomSpawnPoint = new Vector3(
-                Random.Range(-10f, 10f),
-                1f,
-                Random.Range(-10f, 10f)
-            );
-            enemy.transform.position = randomSpawnPoint;
-            enemy.SetActive(true);
-            return;
-        }
-    }
-}
 }

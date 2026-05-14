@@ -211,8 +211,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   zigzagEnemyPrefab: {fileID: 8938671149822179552, guid: 5dbcd92eab2064b438361012861a65fe, type: 3}
   directEnemyPrefab: {fileID: 8938671149822179552, guid: 789e585ae342b84469250e8afc2e12ab, type: 3}
-  poolSizePerType: 5
-  spawnInterval: 2
+  poolSizePerType: 10
+  spawnRadius: 10
 --- !u!4 &197821553
 Transform:
   m_ObjectHideFlags: 0
@@ -724,6 +724,62 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &850725046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850725048}
+  - component: {fileID: 850725047}
+  m_Layer: 0
+  m_Name: WaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &850725047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850725046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 038cf779296844742a0c876a798d5b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+  waves:
+  - waveName: Easy wave
+    enemyCount: 5
+    timeBetweenSpawns: 1.5
+  - waveName: Normal wave
+    enemyCount: 8
+    timeBetweenSpawns: 1
+  - waveName: Final wave
+    enemyCount: 12
+    timeBetweenSpawns: 1
+  timeBetweenWaves: 4
+  enemySpawner: {fileID: 197821552}
+--- !u!4 &850725048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850725046}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.14547, y: -0, z: -0.63336}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1561,3 +1617,4 @@ SceneRoots:
   - {fileID: 1368726019}
   - {fileID: 109782981}
   - {fileID: 1518628278}
+  - {fileID: 850725048}
