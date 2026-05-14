@@ -3,23 +3,36 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab; 
-    public int poolSize = 10;   
-    public float spawnInterval = 3f; 
+    [Header("Düşman Prefab'ları")]
+    public GameObject zigzagEnemyPrefab;
+    public GameObject directEnemyPrefab;
+    
+    [Header("Havuz Ayarları")]
+    public int poolSizePerType = 5;
+    public float spawnInterval = 3f;
 
-    private List<GameObject> enemyPool;
+    private List<GameObject> zigzagPool;
+    private List<GameObject> directPool;
     private float spawnTimer;
 
     void Start()
     {
-        enemyPool = new List<GameObject>();
+        zigzagPool = CreatePool(zigzagEnemyPrefab, poolSizePerType);
+        directPool = CreatePool(directEnemyPrefab, poolSizePerType);
+    }
 
-        for (int i = 0; i < poolSize; i++)
+    private List<GameObject> CreatePool(GameObject prefab, int size)
+    {
+        List<GameObject> pool = new List<GameObject>();
+        if (prefab == null) return pool;
+        
+        for (int i = 0; i < size; i++)
         {
-            GameObject obj = Instantiate(enemyPrefab);
+            GameObject obj = Instantiate(prefab);
             obj.SetActive(false);
-            enemyPool.Add(obj);
+            pool.Add(obj);
         }
+        return pool;
     }
 
     void Update()
@@ -35,18 +48,21 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        foreach (GameObject enemy in enemyPool)
+    List<GameObject> chosenPool = Random.value < 0.5f ? zigzagPool : directPool;
+    
+    foreach (GameObject enemy in chosenPool)
+    {
+        if (!enemy.activeInHierarchy)
         {
-            if (!enemy.activeInHierarchy)
-            {
-                Vector3 randomSpawnPoint = new Vector3(Random.Range(-10f, 10f), 1f, Random.Range(-10f, 10f));
-                enemy.transform.position = randomSpawnPoint;
-                
-                enemy.SetActive(true);
-                return;
-            }
+            Vector3 randomSpawnPoint = new Vector3(
+                Random.Range(-10f, 10f),
+                1f,
+                Random.Range(-10f, 10f)
+            );
+            enemy.transform.position = randomSpawnPoint;
+            enemy.SetActive(true);
+            return;
         }
-        
-        Debug.LogWarning("Havuzda müsait düşman yok!");
     }
+}
 }
