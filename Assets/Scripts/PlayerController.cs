@@ -3,24 +3,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Hareket")]
     [SerializeField] private float moveSpeed = 5f;
 
-    [Header("Nişan Alma")]
     [SerializeField] private LayerMask aimLayerMask;
 
-    [Header("Ateş Etme")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private float fireRate = 0.3f;
     
     private Weapon_Interface myWeapon;
     private float lastFireTime;
     private Camera mainCamera;
+    private Animator animator; 
 
     void Start()
     {
         myWeapon = new BasicWeapon();
         mainCamera = Camera.main;
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -41,13 +40,15 @@ public class PlayerController : MonoBehaviour
         
         moveDirection = moveDirection.normalized;
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+
+        bool isMoving = moveDirection != Vector3.zero;
+        SetAnimatorBool("isRunning", isMoving);
     }
 
     private void HandleAiming()
     {
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(mouseScreenPos);
-
         Plane groundPlane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0));
         
         if (groundPlane.Raycast(ray, out float distance))
@@ -84,8 +85,7 @@ public class PlayerController : MonoBehaviour
         }
 
         int damage = myWeapon.GetDamage();
-        Debug.Log("ATEŞ! Hasar: " + damage + " — FirePoint pos: " + firePoint.position);
-        
+        Debug.Log("ATEŞ! Hasar: " + damage);
     }
 
     private void HandleUpgrade()
@@ -94,6 +94,19 @@ public class PlayerController : MonoBehaviour
         {
             myWeapon = new DamageBoostDecorator(myWeapon);
             Debug.Log("GÜÇLENDİRME ALINDI! Yeni hasar: " + myWeapon.GetDamage());
+        }
+    }
+    private void SetAnimatorBool(string paramName, bool value)
+    {
+        if (animator == null) return;
+        
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName && param.type == AnimatorControllerParameterType.Bool)
+            {
+                animator.SetBool(paramName, value);
+                return;
+            }
         }
     }
 }
