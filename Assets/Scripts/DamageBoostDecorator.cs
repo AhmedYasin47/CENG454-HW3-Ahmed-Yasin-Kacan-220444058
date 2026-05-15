@@ -7,6 +7,6 @@ public class DamageBoostDecorator : WeaponDecorator
 
     public override int GetDamage()
     {
-        return base.GetDamage() + 15; 
+        return base.GetDamage() + 20; 
     }
 }

@@ -91,22 +91,30 @@ public class WaveManager : MonoBehaviour
     }
 
     private void HandleEnemyDied(EnemyHealth enemy)
-    {
-        if (!isWaveActive) return;
-        
-        aliveEnemiesCount--;
-        OnEnemyCountChanged?.Invoke(aliveEnemiesCount);
-        
-        Debug.Log("Kalan düşman: " + aliveEnemiesCount);
+{
+    if (!isWaveActive) return;
+    
+    aliveEnemiesCount--;
+    OnEnemyCountChanged?.Invoke(aliveEnemiesCount);
+    
+    Debug.Log("Kalan düşman: " + aliveEnemiesCount);
 
-        if (aliveEnemiesCount <= 0)
+    if (aliveEnemiesCount <= 0)
+    {
+        isWaveActive = false;
+        Debug.Log("✅ DALGA " + (currentWaveIndex + 1) + " TEMİZLENDİ!");
+        OnWaveCompleted?.Invoke(currentWaveIndex);
+        
+        currentWaveIndex++;
+        
+        if (currentWaveIndex >= waves.Count)
         {
-            isWaveActive = false;
-            Debug.Log("✅ DALGA " + (currentWaveIndex + 1) + " TEMİZLENDİ!");
-            OnWaveCompleted?.Invoke(currentWaveIndex);
-            
-            currentWaveIndex++;
+            StartNextWave();
+        }
+        else
+        {
             StartCoroutine(StartNextWaveAfterDelay(timeBetweenWaves));
+        }
         }
     }
 

@@ -163,20 +163,20 @@ public class EnemyController : MonoBehaviour
     }
 
     void OnEnable()
-    {
-        SetStrategy(new ZigZagMovementStrategy());
-        isAttacking = false;
-        SetAnimatorBool("isAttacking", false);
+{
+    SetStrategyByType();
+    isAttacking = false;
+    SetAnimatorBool("isAttacking", false);
 
-        if (coreTarget != null)
+    if (coreTarget != null)
+    {
+        Vector3 lookDirection = coreTarget.position - transform.position;
+        lookDirection.y = 0; 
+        
+        if (lookDirection != Vector3.zero)
         {
-            Vector3 lookDirection = coreTarget.position - transform.position;
-            lookDirection.y = 0; 
-            
-            if (lookDirection != Vector3.zero)
-            {
-                transform.rotation = Quaternion.LookRotation(lookDirection);
-            }
+            transform.rotation = Quaternion.LookRotation(lookDirection);
         }
     }
+}
 }
