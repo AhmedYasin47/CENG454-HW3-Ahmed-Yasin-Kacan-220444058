@@ -96,6 +96,11 @@ public class PlayerController : MonoBehaviour
     {
         bulletCtrl.Launch(firePoint.forward, damage);
     }
+    
+    if (SoundManager.Instance != null)
+    {
+        SoundManager.Instance.PlayShoot();
+    }
 }
 
     private void HandleUpgrade()
