@@ -62,13 +62,11 @@ public class WaveManager : MonoBehaviour
         if (currentWaveIndex >= waves.Count)
         {
             gameWon = true;
-            Debug.Log("All wawes are clear!");
             OnAllWavesCompleted?.Invoke();
             return;
         }
 
         WaveData wave = waves[currentWaveIndex];
-        Debug.Log("Dalga başladı");
         
         OnWaveStarted?.Invoke(currentWaveIndex + 1, waves.Count);
         
@@ -96,13 +94,11 @@ public class WaveManager : MonoBehaviour
     
     aliveEnemiesCount--;
     OnEnemyCountChanged?.Invoke(aliveEnemiesCount);
-    
-    Debug.Log("Kalan düşman: " + aliveEnemiesCount);
+
 
     if (aliveEnemiesCount <= 0)
     {
         isWaveActive = false;
-        Debug.Log("✅ DALGA " + (currentWaveIndex + 1) + " TEMİZLENDİ!");
         OnWaveCompleted?.Invoke(currentWaveIndex);
         
         currentWaveIndex++;
